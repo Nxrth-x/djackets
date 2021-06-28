@@ -15,7 +15,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 :root {
   --black: #000;
   --black-light: #181818;
@@ -133,10 +133,42 @@ img {
 a {
   text-decoration: none;
   color: inherit;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
-a:hover {
-  text-decoration: underline;
+body::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+body::-webkit-scrollbar-track {
+  background: var(--black-light);
+}
+
+body::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    180deg,
+    var(--pink-600),
+    var(--red-600),
+    var(--yellow-600)
+  );
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+b {
+  color: var(--gray-700);
+}
+
+html,
+body {
+  color: var(--gray-600);
 }
 
 @media (max-width: 1080px) {
@@ -180,5 +212,27 @@ a:hover {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+.btn-gradient {
+  padding: 0.5rem 1rem;
+
+  color: var(--white);
+
+  border: none;
+  border-radius: 0.25rem;
+
+  background: linear-gradient(
+    90deg,
+    var(--pink-600),
+    var(--red-600),
+    var(--yellow-600)
+  );
+
+  transition: var(--transition);
+
+  &:hover {
+    filter: brightness(0.9);
+  }
 }
 </style>

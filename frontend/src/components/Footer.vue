@@ -56,7 +56,9 @@ div.container {
   div.links {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.25rem;
+
+    font-size: 0.8rem;
 
     a {
       color: var(--pink-500);
@@ -65,6 +67,10 @@ div.container {
 
   div.about {
     font-size: 0.8rem;
+
+    a {
+      color: var(--pink-500);
+    }
   }
 
   @media (min-width: 720px) {

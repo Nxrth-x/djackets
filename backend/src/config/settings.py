@@ -134,9 +134,20 @@ MEDIA_ROOT = BASE_DIR / 'media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Custom user model
+
+AUTH_USER_MODEL = 'product.CustomUser'
 
 # CORS Headers
-
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
 ]
+
+# REST Framework
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+}

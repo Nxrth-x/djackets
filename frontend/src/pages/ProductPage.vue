@@ -24,16 +24,19 @@
           </div>
           <div class="info">
             <h2>Information</h2>
-            <p><b>Price:</b> ${{ calculatedPrice }}</p>
+            <p><b>Price:</b> ${{ product.price }}</p>
           </div>
           <div class="product-quantity">
             <button @click="decrement">-</button>
             <input type="number" disabled v-model="quantity" />
             <button @click="increment">+</button>
           </div>
-          <button @click="addToCart" class="theme-gradient-background">
-            Add to cart
-          </button>
+          <div class="cart-action">
+            <button @click="addToCart" class="btn-gradient add">
+              Add to cart
+            </button>
+            <button class="remove">Remove from cart</button>
+          </div>
         </div>
       </div>
       <div class="more-products">
@@ -45,13 +48,12 @@
 </template>
 
 <script>
-import { ref, onMounted, computed, inject } from 'vue'
+import { ref, onMounted, watch, inject } from 'vue'
 import { useRoute } from 'vue-router'
 
 import useModal from '../hooks/useModal'
 import useCounter from '../hooks/useCounter'
 import { getLatestProducts, getProduct } from '../helpers/requests'
-import { calculateAndFormatPrice } from '../helpers/price'
 
 import MainLayout from '../layouts/MainLayout.vue'
 import ProductModal from '../components/ProductModal.vue'
@@ -68,21 +70,20 @@ export default {
   setup() {
     /** @type {Store} */
     const store = inject('store')
-    const params = useRoute().params
+    const route = useRoute()
 
     const [showModal, toggleModal] = useModal()
 
     const product = ref({})
     const products = ref([])
-    const productId = ref('')
+    const productId = ref(null)
     const [quantity, increment, decrement] = useCounter(1, 1, 10)
 
-    onMounted(async () => {
-      const { categorySlug, productSlug } = params
+    const handleFetchData = async ({ categorySlug, productSlug }) => {
       const requestProduct = await getProduct(categorySlug, productSlug)
 
       product.value = requestProduct
-      productId.value = requestProduct.get_absolute_url
+      productId.value = requestProduct.id
 
       const storedProduct = store.state.cart.find(
         ({ id }) => id === productId.value
@@ -90,7 +91,21 @@ export default {
 
       if (storedProduct) {
         quantity.value = storedProduct.quantity
+      } else {
+        quantity.value = 1
       }
+    }
+
+    watch(route, async ({ params }) => {
+      await handleFetchData(params)
+      window.scroll({
+        top: 0,
+        behavior: 'smooth',
+      })
+    })
+
+    onMounted(async () => {
+      await handleFetchData(route.params)
     })
 
     onMounted(async () => {
@@ -98,10 +113,6 @@ export default {
 
       products.value = productsRequest
     })
-
-    const calculatedPrice = computed(() =>
-      calculateAndFormatPrice(+product.value.price, quantity.value)
-    )
 
     const addToCart = () => {
       store.methods.addProduct({
@@ -117,7 +128,6 @@ export default {
       quantity,
       product,
       addToCart,
-      calculatedPrice,
       increment,
       decrement,
       products,
@@ -207,23 +217,34 @@ div.product-info {
     }
   }
 
-  & > button {
-    margin: 1rem 0;
-    color: var(--white);
+  div.cart-action {
+    button {
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+      width: 100%;
+      transition: var(--transition);
 
-    width: 100%;
+      &:hover {
+        filter: brightness(0.9);
+      }
 
-    border: none;
-    padding: 0.5rem;
+      &.add {
+        margin: 1rem 0;
+      }
 
-    border-radius: 0.25rem;
+      &.remove {
+        border: 1px solid var(--red-600);
 
-    box-shadow: var(--shadow-dark);
+        color: var(--red-600);
+        background: transparent;
 
-    transition: var(--transition);
+        box-shadow: var(--shadow);
 
-    &:hover {
-      filter: brightness(0.9);
+        &:hover {
+          color: var(--white);
+          background: var(--red-600);
+        }
+      }
     }
   }
 }

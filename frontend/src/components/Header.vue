@@ -5,13 +5,13 @@
         >Djackets</router-link
       >
       <div class="links">
-        <a href="#">Summer</a>
-        <a href="#">Winter</a>
-        <button class="login">Login</button>
-        <button class="cart">
+        <a class="link" href="#">Summer</a>
+        <a class="link" href="#">Winter</a>
+        <router-link class="button login" to="/login">Login</router-link>
+        <router-link class="button cart" to="/cart">
           Cart
           <span v-if="productsQuantity">{{ productsQuantity }}</span>
-        </button>
+        </router-link>
       </div>
     </div>
   </header>
@@ -39,6 +39,9 @@ export default {
 <style lang="scss" scoped>
 header {
   background: var(--gray-100);
+  height: 5rem;
+  display: flex;
+  align-items: center;
 }
 
 div.container {
@@ -51,7 +54,7 @@ div.container {
   a.title {
     font-weight: 700;
     font-size: 2rem;
-    letter-spacing: -1px;
+    letter-spacing: -1.5px;
 
     &:hover {
       text-decoration: none;
@@ -63,7 +66,7 @@ div.container {
     align-items: center;
     gap: 1rem;
 
-    a {
+    a.link {
       text-transform: uppercase;
       letter-spacing: 2px;
 
@@ -75,19 +78,24 @@ div.container {
       }
     }
 
-    button {
+    a.button {
       display: none;
 
       padding: 0.25rem;
 
       width: 5rem;
 
+      text-align: center;
       font-size: 0.9rem;
 
       border: none;
       border-radius: 0.25rem;
 
       transition: var(--transition);
+
+      &:hover {
+        text-decoration: none;
+      }
 
       &.login {
         border: 1px solid var(--red-600);

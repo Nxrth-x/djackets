@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 // Pages
 import IndexPage from '../pages/IndexPage.vue'
-import ProductPage from '../pages/ProductPage.vue'
 
 const routes = [
   {
@@ -10,8 +9,12 @@ const routes = [
     component: IndexPage,
   },
   {
+    path: '/login',
+    component: () => import('../pages/LoginPage.vue'),
+  },
+  {
     path: '/:categorySlug/:productSlug',
-    component: ProductPage,
+    component: () => import('../pages/ProductPage.vue'),
   },
 ]
 

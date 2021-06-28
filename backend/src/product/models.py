@@ -1,9 +1,10 @@
 from io import BytesIO
 from PIL import Image
+from uuid import uuid4
+from django.contrib.auth.models import AbstractUser
 from django.core.files import File
 from django.contrib.admin import decorators
 from django.db import models
-from uuid import uuid4
 
 
 def product_image_upload(instance, filename):
@@ -11,6 +12,15 @@ def product_image_upload(instance, filename):
     image_filename = f"{id}-{filename}"
 
     return image_filename
+
+
+class CustomUser(AbstractUser):
+    email = models.EmailField(max_length=255, unique=True)
+
+    REQUIRED_FIELDS = ['username']
+
+    USERNAME_FIELD = 'email'
+    EMAIL_FIELD = 'email'
 
 
 class Category(models.Model):
