@@ -1,0 +1,15 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "src/manage.py",
+  "author": "Nxrth-x",
+  "license": "MIT",
+  "scripts": {
+    "dev": "python src/manage.py runserver",
+    "create:app": "python src/manage.py createapp",
+    "create:project": "python src/manage.py createproject",
+    "create:admin": "python src/manage.py createsuperuser",
+    "migration:make": "python src/manage.py makemigrations",
+    "migration:run": "python src/manage.py migrate"
+  }
+}

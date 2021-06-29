@@ -1,7 +1,7 @@
 import api from '../services/api'
 
 export const getLatestProducts = async () => {
-  const { data } = await api.get('lastest-products/')
+  const { data } = await api.get('latest-products/')
 
   return data
 }

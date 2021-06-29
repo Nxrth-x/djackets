@@ -1,10 +1,10 @@
 <template>
   <div class="product">
-    <img :src="product.get_thumbnail" :alt="product.name" />
+    <img :src="product.thumbnail_url" :alt="product.name" />
     <div class="product-info">
       <h3>{{ product.name }}</h3>
       <p class="price">${{ product.price }}</p>
-      <router-link class="theme-gradient-font" :to="product.get_absolute_url">
+      <router-link class="theme-gradient-font" :to="product.absolute_url">
         View details
       </router-link>
     </div>

@@ -3,12 +3,12 @@ from django.db.models import query
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from product.models import Product
-from product.serializers import ProductSerialzier
+from product.models import Category, Product
+from product.serializers import CategoryDetailSerializer, ProductDetailSerializer, ProductListSerializer
 
 
 class LatestProductsList(generics.ListAPIView):
-    serializer_class = ProductSerialzier
+    serializer_class = ProductListSerializer
 
     def get_queryset(self):
         queryset = Product.objects.all()[0:4]
@@ -27,5 +27,20 @@ class ProductDetail(APIView):
 
     def get(self, request, category_slug, product_slug, format=None):
         product = self.get_object(category_slug, product_slug)
-        serializer = ProductSerialzier(product)
+        serializer = ProductDetailSerializer(product)
         return Response(serializer.data)
+
+
+class CategoryDetail(APIView):
+    def get(self, request, category_slug):
+        category = Category.objects.get(slug=category_slug)
+
+        serializer = CategoryDetailSerializer(category)
+
+        return Response(serializer.data, status=200)
+
+    def handle_exception(self, exc):
+        if type(exc) == Category.DoesNotExist:
+            return Response({'error': 'Not found'}, status=404)
+
+        return Response({'error': 'Internal server error'}, status=500)

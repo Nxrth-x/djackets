@@ -1,22 +1,51 @@
 from rest_framework import serializers
-from product.models import Product
+from product.models import Product, Category
 
 
-class ProductSerialzier(serializers.ModelSerializer):
-    category = serializers.SerializerMethodField()
+class ProductListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = [
+            'name',
+            'price',
+            'absolute_url',
+            'thumbnail_url',
+        ]
 
-    def get_category(self, obj: Product):
-        return obj.category.name
+
+class ProductDetailSerializer(serializers.ModelSerializer):
+    category = serializers.StringRelatedField()
 
     class Meta:
         model = Product
         fields = [
             'id',
             'name',
-            'get_absolute_url',
             'description',
             'price',
             'category',
-            'get_image',
-            'get_thumbnail',
+            'absolute_url',
+            'image_url',
+            'thumbnail_url',
+        ]
+
+
+class CategoryListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = [
+            'name',
+            'slug',
+        ]
+
+
+class CategoryDetailSerializer(serializers.ModelSerializer):
+    products = ProductListSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = Category
+        fields = [
+            'name',
+            'slug',
+            'products',
         ]

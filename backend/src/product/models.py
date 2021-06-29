@@ -61,16 +61,19 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
-    def get_absolute_url(self):
+    @property
+    def absolute_url(self):
         return f'/{self.category.slug}/{self.slug}'
 
-    def get_image(self):
+    @property
+    def image_url(self):
         if self.image:
             return 'http://127.0.0.1:8000' + self.image.url
 
         return ''
 
-    def get_thumbnail(self):
+    @property
+    def thumbnail_url(self):
         if self.thumbnail:
             return 'http://127.0.0.1:8000' + self.image.url
 

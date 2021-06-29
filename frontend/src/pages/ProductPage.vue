@@ -2,7 +2,7 @@
   <main-layout :title="product.category">
     <ProductModal
       v-if="showModal"
-      :src="product.get_image"
+      :src="product.image_url"
       :alt="product.name"
       @derender="toggleModal"
     />
@@ -10,7 +10,7 @@
       <div class="main-product">
         <div class="product-details">
           <img
-            :src="product.get_image"
+            :src="product.image_url"
             :alt="product.name"
             @click="toggleModal"
           />
@@ -48,12 +48,13 @@
 </template>
 
 <script>
-import { ref, onMounted, watch, inject } from 'vue'
+import { ref, onMounted, watch, inject, onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
 
 import useModal from '../hooks/useModal'
 import useCounter from '../hooks/useCounter'
 import { getLatestProducts, getProduct } from '../helpers/requests'
+import { objectIsEmpty } from '../helpers/util'
 
 import MainLayout from '../layouts/MainLayout.vue'
 import ProductModal from '../components/ProductModal.vue'
@@ -96,12 +97,18 @@ export default {
       }
     }
 
-    watch(route, async ({ params }) => {
-      await handleFetchData(params)
-      window.scroll({
-        top: 0,
-        behavior: 'smooth',
+    const addToCart = () => {
+      store.methods.addProduct({
+        id: productId.value,
+        quantity: quantity.value,
       })
+      store.dispatchMiddlewares()
+    }
+
+    watch(route, async ({ params }) => {
+      if (objectIsEmpty(params)) return
+
+      await handleFetchData(params)
     })
 
     onMounted(async () => {
@@ -113,14 +120,6 @@ export default {
 
       products.value = productsRequest
     })
-
-    const addToCart = () => {
-      store.methods.addProduct({
-        id: productId.value,
-        quantity: quantity.value,
-      })
-      store.dispatchMiddlewares()
-    }
 
     return {
       showModal,
